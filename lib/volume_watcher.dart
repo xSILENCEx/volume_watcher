@@ -15,10 +15,8 @@ class VolumeWatcher extends StatefulWidget {
     this.child,
   }) : super(key: key);
 
-  static const MethodChannel methodChannel =
-      const MethodChannel('volume_watcher_method');
-  static const EventChannel eventChannel =
-      const EventChannel('volume_watcher_event');
+  static const MethodChannel methodChannel = const MethodChannel('volume_watcher_method');
+  static const EventChannel eventChannel = const EventChannel('volume_watcher_event');
   static StreamSubscription? _subscription;
   static Map<int, Function> _events = {};
 
@@ -42,9 +40,7 @@ class VolumeWatcher extends StatefulWidget {
   /// 返回id, 用于删除监听器使用
   static int? addListener(Function? onEvent) {
     //event channel 注册
-    _subscription ??= eventChannel
-        .receiveBroadcastStream('init')
-        .listen(_onEvent, onError: _onError);
+    _subscription ??= eventChannel.receiveBroadcastStream('init').listen(_onEvent, onError: _onError);
 
     if (onEvent != null) {
       _events[onEvent.hashCode] = onEvent;
@@ -62,6 +58,7 @@ class VolumeWatcher extends StatefulWidget {
       _events.remove(id);
     }
     _subscription?.cancel();
+    _subscription = null;
   }
 
   @override
@@ -70,8 +67,7 @@ class VolumeWatcher extends StatefulWidget {
   }
 
   static Future<String> get platformVersion async {
-    final String version =
-        await methodChannel.invokeMethod('getPlatformVersion');
+    final String version = await methodChannel.invokeMethod('getPlatformVersion');
     return version;
   }
 
@@ -79,8 +75,7 @@ class VolumeWatcher extends StatefulWidget {
    * 获取当前系统最大音量
    */
   static Future<double> get getMaxVolume async {
-    final double maxVolume =
-        await methodChannel.invokeMethod('getMaxVolume', {});
+    final double maxVolume = await methodChannel.invokeMethod('getMaxVolume', {});
     return maxVolume;
   }
 
@@ -88,8 +83,7 @@ class VolumeWatcher extends StatefulWidget {
    * 获取当前系统音量
    */
   static Future<double> get getCurrentVolume async {
-    final double currentVolume =
-        await methodChannel.invokeMethod('getCurrentVolume', {});
+    final double currentVolume = await methodChannel.invokeMethod('getCurrentVolume', {});
     return currentVolume;
   }
 
@@ -97,8 +91,7 @@ class VolumeWatcher extends StatefulWidget {
    * 设置系统音量
    */
   static Future<bool> setVolume(double volume) async {
-    final bool success =
-        await methodChannel.invokeMethod('setVolume', {'volume': volume});
+    final bool success = await methodChannel.invokeMethod('setVolume', {'volume': volume});
     return success;
   }
 
